@@ -4,7 +4,6 @@ console.log(products)
 $(".filters").append(`<input type="text" name="" id="search_input" class="grow" />`)
 $(".filters").append(`<button id="search_btn">Search</button>`)
 $(".filters").after(`<span id="table"></span>`)
-$(".filters").after(`<span id="log"></span>`)
 // generating the table
 function renderTable() {
     var brands = []
@@ -75,38 +74,22 @@ function renderTable() {
 renderTable()
 // search utility by id
 function searchById(query) {
-    let ctr = 0
     for (let index = 1; index <= $('tr').length; index++) {
         console.log($(`tr:eq(${index}) td:eq(0)`).text())
         var ids = $(`tr:eq(${index}) td:eq(0)`).text()
-        if (!deletedItems.includes(ids)) {
-            if (ids.search(query) >= 0) {
-                console.log($(`tr:eq(${index})`).text())
-                ctr++
-            }
-            else {
-                $(`tr:eq(${index})`).css('display', 'none')
-            }
-        }
-        else {
+        if (ids.search(query) < 0) {
             $(`tr:eq(${index})`).css('display', 'none')
         }
 
-
     }
-    console.log("ctr is " + ctr)
 }
 // search utility by Name
 function searchByName(query) {
-    let ctr = 0
     for (let index = 1; index <= $('tr').length; index++) {
         console.log($(`tr:eq(${index}) td:eq(1)`).text())
         var name = $(`tr:eq(${index}) td:eq(1)`).text().toLowerCase()
-        if (name.search(query.toLowerCase()) >= 0) {
+        if (name.search(query.toLowerCase()) < 0) {
             console.log($(`tr:eq(${index})`).text())
-            ctr++
-        }
-        else {
             $(`tr:eq(${index})`).css('display', 'none')
         }
 
@@ -122,31 +105,24 @@ function clearFilter() {
     }
 }
 function filterByBrands(query) {
-    let ctr = 0
     for (let index = 1; index <= $('tr').length; index++) {
         console.log($(`tr:eq(${index}) td:eq(2)`).text())
         var name = $(`tr:eq(${index}) td:eq(2)`).text().toLowerCase()
-        if (name.search(query.toLowerCase()) >= 0) {
+        if (name.search(query.toLowerCase()) < 0) {
             console.log($(`tr:eq(${index})`).text())
-            ctr++
-        }
-        else {
             $(`tr:eq(${index})`).css('display', 'none')
         }
+
 
     }
 }
 
 function filterByOs(query) {
-    let ctr = 0
     for (let index = 1; index <= $('tr').length; index++) {
         console.log($(`tr:eq(${index}) td:eq(3)`).text())
         var name = $(`tr:eq(${index}) td:eq(3)`).text().toLowerCase()
-        if (name.search(query.toLowerCase()) >= 0) {
+        if (name.search(query.toLowerCase()) < 0) {
             console.log($(`tr:eq(${index})`).text())
-            ctr++
-        }
-        else {
             $(`tr:eq(${index})`).css('display', 'none')
         }
 
@@ -204,7 +180,7 @@ $("body").on("click", "#hide", function () {
         if (name.search(query.toLowerCase()) >= 0) {
             console.log($(`tr:eq(${index})`).text())
             $(`tr:eq(${index})`).css('display', 'none')
-            alert($(`tr:eq(${index}) td:eq(0)`).text())
+            // alert($(`tr:eq(${index}) td:eq(0)`).text())
             deletedItems.push($(`tr:eq(${index}) td:eq(0)`).text())
         }
 
