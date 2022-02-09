@@ -1,0 +1,21 @@
+.s1{
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    text-transform: capitalize;
+    flex-direction: column;
+}
+table{
+    border: 1px solid black;
+}
+table td,table th{
+    padding: 10px;
+    border: 2px solid black;
+}
+.filters{
+    display: flex;
+}
+.grow{
+    flex-grow: 1;
+}
