@@ -1,3 +1,4 @@
+const deletedItems = []
 console.log(products)
 //adding input markup to the DOM
 $(".filters").append(`<input type="text" name="" id="search_input" class="grow" />`)
@@ -78,22 +79,22 @@ function searchById(query) {
     for (let index = 1; index <= $('tr').length; index++) {
         console.log($(`tr:eq(${index}) td:eq(0)`).text())
         var ids = $(`tr:eq(${index}) td:eq(0)`).text()
-        if (ids.search(query) >= 0) {
-            console.log($(`tr:eq(${index})`).text())
-            ctr++
+        if (!deletedItems.includes(ids)) {
+            if (ids.search(query) >= 0) {
+                console.log($(`tr:eq(${index})`).text())
+                ctr++
+            }
+            else {
+                $(`tr:eq(${index})`).css('display', 'none')
+            }
         }
         else {
             $(`tr:eq(${index})`).css('display', 'none')
         }
 
+
     }
     console.log("ctr is " + ctr)
-    if (ctr == 0) {
-        log('e', 'No Results to display')
-    }
-    else {
-        log("s", `${ctr} Results found`)
-    }
 }
 // search utility by Name
 function searchByName(query) {
@@ -110,23 +111,15 @@ function searchByName(query) {
         }
 
     }
-    if (ctr == 0) {
-        log('e', 'No Results to display')
-    }
-    else {
-        log("s", `${ctr} Results found`)
-    }
 }
 function clearFilter() {
     console.log("CLEARING OUT")
     $("#log").text("")
     for (let index = 0; index <= $('tr').length; index++) {
-        $(`tr:eq(${index})`).css('display', '')
+        if (!deletedItems.includes($(`tr:eq(${index}) td:eq(0)`).text())) {
+            $(`tr:eq(${index})`).css('display', '')
+        }
     }
-}
-function log(type, content) {
-    $('#log').css("color", type == 'e' ? 'red' : 'green')
-    $('#log').text(content)
 }
 function filterByBrands(query) {
     let ctr = 0
@@ -141,12 +134,6 @@ function filterByBrands(query) {
             $(`tr:eq(${index})`).css('display', 'none')
         }
 
-    }
-    if (ctr == 0) {
-        log('e', 'No Results to display')
-    }
-    else {
-        log("s", `${ctr} Results found`)
     }
 }
 
@@ -163,12 +150,6 @@ function filterByOs(query) {
             $(`tr:eq(${index})`).css('display', 'none')
         }
 
-    }
-    if (ctr == 0) {
-        log('e', 'No Results to display')
-    }
-    else {
-        log("s", `${ctr} Results found`)
     }
 }
 
@@ -223,6 +204,8 @@ $("body").on("click", "#hide", function () {
         if (name.search(query.toLowerCase()) >= 0) {
             console.log($(`tr:eq(${index})`).text())
             $(`tr:eq(${index})`).css('display', 'none')
+            alert($(`tr:eq(${index}) td:eq(0)`).text())
+            deletedItems.push($(`tr:eq(${index}) td:eq(0)`).text())
         }
 
     }
