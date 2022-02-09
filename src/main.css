@@ -1,21 +1,33 @@
-.s1{
-    display: flex;
-    height: 100vh;
-    justify-content: center;
-    align-items: center;
-    text-transform: capitalize;
-    flex-direction: column;
+.s1 {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  text-transform: capitalize;
+  flex-direction: column;
 }
-table{
-    border: 1px solid black;
+table {
+  border: 1px solid black;
 }
-table td,table th{
+table td,
+table th {
+  padding: 10px;
+  border: 2px solid black;
+}
+.filters {
+  display: flex;
+  padding: 10px;
+}
+.grow {
+  flex-grow: 1;
+}
+
+
+#log{
     padding: 10px;
-    border: 2px solid black;
+    color: red;
 }
-.filters{
-    display: flex;
-}
-.grow{
-    flex-grow: 1;
+
+input,button,select{
+    border: 1px solid black;
 }
