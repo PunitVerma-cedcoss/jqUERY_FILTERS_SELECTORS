@@ -1,4 +1,9 @@
 console.log(products)
+//adding input markup to the DOM
+$(".filters").append(`<input type="text" name="" id="search_input" class="grow" />`)
+$(".filters").append(`<button id="search_btn">Search</button>`)
+$(".filters").after(`<span id="table"></span>`)
+$(".filters").after(`<span id="log"></span>`)
 // generating the table
 function renderTable() {
     var brands = []
