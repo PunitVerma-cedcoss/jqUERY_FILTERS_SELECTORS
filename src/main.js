@@ -163,6 +163,7 @@ function filterByBrand(query) {
             renderTable(currentList)
         }
         else {
+            currentList = products
             renderTable(products, false)
 
         }
