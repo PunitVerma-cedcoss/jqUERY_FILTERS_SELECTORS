@@ -1,3 +1,6 @@
+* {
+  transition: 0.3s all ease;
+}
 body {
   display: flex;
   height: 100vh;
@@ -16,18 +19,21 @@ table th {
 }
 .filters {
   display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 10px;
 }
 .grow {
   flex-grow: 1;
 }
 
-
-#log{
-    padding: 10px;
-    color: red;
+#log {
+  padding: 10px;
+  color: red;
 }
 
-input,button,select{
-    border: 1px solid black;
+input,
+button,
+select {
+  border: 1px solid black;
 }

@@ -1,44 +1,48 @@
 const deletedItems = []
+const hiddemItems = []
+var currentList = products
 console.log(products)
 //adding input markup to the DOM
 $(".filters").append(`<input type="text" name="" id="search_input" class="grow" />`)
-$(".filters").append(`<button id="search_btn">Search</button>`)
 $(".filters").after(`<span id="table"></span>`)
 // generating the table
-function renderTable() {
+function renderTable(list, sel) {
+    // clearing out previous markup
+    $("table").remove()
     var brands = []
     var os = []
-    for (let index = 0; index < products.length; index++) {
-        brands.push(products[index].brand)
-        os.push(products[index].os)
-    }
-    // removing duplicates elements
-    brands = Array.from(new Set(brands))
-    os = Array.from(new Set(os))
-    // generating the filters dropdown
-    var brandMarkup = `
-    <select name="" id="brands">
-    <option value="none">Select Brands</option>
-    `
-    for (let index = 0; index < brands.length; index++) {
-        brandMarkup += `<option value="${brands[index]}">${brands[index]}</option>`
-    }
-    brandMarkup += `
+    if (sel) {
+        for (let index = 0; index < products.length; index++) {
+            brands.push(products[index].brand)
+            os.push(products[index].os)
+        }
+        // removing duplicates elements
+        brands = Array.from(new Set(brands))
+        os = Array.from(new Set(os))
+        // generating the filters dropdown
+        var brandMarkup = `
+        <select name="" id="brands">
+        <option value="none">Select Brands</option>
+        `
+        for (let index = 0; index < brands.length; index++) {
+            brandMarkup += `<option value="${brands[index]}">${brands[index]}</option>`
+        }
+        brandMarkup += `
+            </select>
+        `
+        $('.filters').append(brandMarkup)
+        var osMarkup = `
+        <select name="" id="os">
+        <option value="none">Select OS</option> 
+        `
+        for (let index = 0; index < os.length; index++) {
+            osMarkup += `<option value="${os[index]}">${os[index]}</option>`
+        }
+        osMarkup += `
         </select>
-    `
-    $('.filters').append(brandMarkup)
-
-    var osMarkup = `
-    <select name="" id="os">
-    <option value="none">Select OS</option> 
-    `
-    for (let index = 0; index < os.length; index++) {
-        osMarkup += `<option value="${os[index]}">${os[index]}</option>`
+        `
+        $('.filters').append(osMarkup)
     }
-    osMarkup += `
-    </select>
-    `
-    $('.filters').append(osMarkup)
     // aliginnig the filter tab to the table
     var markup = `<table>`
     markup += `
@@ -53,16 +57,17 @@ function renderTable() {
     </thead>
     <tbody>
         `
-    for (let index = 0; index < products.length; index++) {
+    for (let index = 0; index < list.length; index++) {
         markup += `<tr>
-        <td>${products[index].id}</td>
-        <td>${products[index].name}</td>
-        <td>${products[index].brand}</td>
-        <td>${products[index].os}</td>
-        <td style="text-align:center;"><a href="#" data="${products[index].id}" id="hide">X</a></td>
-        </tr>
-        `
+                <td>${list[index].id}</td>
+                <td>${list[index].name}</td>
+                <td>${list[index].brand}</td>
+                <td>${list[index].os}</td>
+                <td style="text-align:center;"><a href="#" data="${list[index].id}" id="hide">X</a></td>
+                </tr>
+                `
     }
+
     markup += `
     </tbody>
     </table > `
@@ -71,30 +76,98 @@ function renderTable() {
     $(".filters").css("width", `${$('table').width()}px`)
 
 }
-renderTable()
-// search utility by id
-function searchById(query) {
-    for (let index = 1; index <= $('tr').length; index++) {
-        console.log($(`tr:eq(${index}) td:eq(0)`).text())
-        var ids = $(`tr:eq(${index}) td:eq(0)`).text()
-        if (ids.search(query) < 0) {
-            $(`tr:eq(${index})`).css('display', 'none')
-        }
+renderTable(products, true)
 
+function getObjectByProperty(products, prop, value, negation = false, caseSensitive = true) {
+    var list = []
+    if (negation) {
+        products.forEach(i => {
+            if (!caseSensitive) {
+                if (i[prop] != value) {
+                    list.push(i)
+                }
+            }
+            else {
+                if (i[prop].toLowerCase().match(value.toLowerCase())) {
+                    list.push(i)
+                }
+            }
+        })
+        return list
+
+    } else {
+        products.forEach(i => {
+            if (!caseSensitive) {
+                if (i[prop] == value) {
+                    list.push(i)
+                }
+            }
+            else {
+                if (i[prop].toLowerCase().match(value.toLowerCase())) {
+                    list.push(i)
+                }
+            }
+        })
+        return list
     }
 }
-// search utility by Name
-function searchByName(query) {
-    for (let index = 1; index <= $('tr').length; index++) {
-        console.log($(`tr:eq(${index}) td:eq(1)`).text())
-        var name = $(`tr:eq(${index}) td:eq(1)`).text().toLowerCase()
-        if (name.search(query.toLowerCase()) < 0) {
-            console.log($(`tr:eq(${index})`).text())
-            $(`tr:eq(${index})`).css('display', 'none')
-        }
 
+function filterByOs(query) {
+    var x = $("#brands").val()
+    console.log(query)
+    if (x != 'none') {
+        console.log("Dependency of Brand")
+        if (query != "none") {
+            console.log(getObjectByProperty(getObjectByProperty(products, "brand", x), "os", query))
+            currentList = getObjectByProperty(getObjectByProperty(products, "brand", x), "os", query)
+            renderTable(currentList, false)
+        }
+        else {
+            currentList = getObjectByProperty(products, "brand", x)
+            renderTable(currentList, false)
+        }
+    }
+    else {
+        console.log("at 146")
+        if (query != "none") {
+            currentList = getObjectByProperty(products, "os", query)
+            renderTable(currentList)
+        }
+        else {
+            renderTable(products, false)
+
+        }
     }
 }
+
+function filterByBrand(query) {
+    var x = $("#os").val()
+    console.log(query)
+    if (x != 'none') {
+        console.log("Dependency of Os")
+        if (query != "none") {
+            console.log(getObjectByProperty(getObjectByProperty(products, "os", x), "brand", query))
+            currentList = getObjectByProperty(getObjectByProperty(products, "os", x), "brand", query)
+            renderTable(currentList, false)
+        }
+        else {
+            currentList = getObjectByProperty(products, "os", x)
+            renderTable(currentList, false)
+        }
+    }
+    else {
+        console.log("at 146")
+        if (query != "none") {
+            currentList = getObjectByProperty(products, "brand", query)
+            renderTable(currentList)
+        }
+        else {
+            renderTable(products, false)
+
+        }
+    }
+}
+
 function clearFilter() {
     console.log("CLEARING OUT")
     $("#log").text("")
@@ -104,85 +177,37 @@ function clearFilter() {
         }
     }
 }
-function filterByBrands(query) {
-    for (let index = 1; index <= $('tr').length; index++) {
-        console.log($(`tr:eq(${index}) td:eq(2)`).text())
-        var name = $(`tr:eq(${index}) td:eq(2)`).text().toLowerCase()
-        if (name.search(query.toLowerCase()) < 0) {
-            console.log($(`tr:eq(${index})`).text())
-            $(`tr:eq(${index})`).css('display', 'none')
-        }
 
-
+$("#search_input").keyup(function () {
+    var query = $(this).val()
+    if (query == "") {
+        renderTable(currentList)
     }
-}
-
-function filterByOs(query) {
-    for (let index = 1; index <= $('tr').length; index++) {
-        console.log($(`tr:eq(${index}) td:eq(3)`).text())
-        var name = $(`tr:eq(${index}) td:eq(3)`).text().toLowerCase()
-        if (name.search(query.toLowerCase()) < 0) {
-            console.log($(`tr:eq(${index})`).text())
-            $(`tr:eq(${index})`).css('display', 'none')
-        }
-
+    else if (query.match(/\D/)) {
+        console.log("searchign by name")
+        console.log(getObjectByProperty(currentList, "name", query, false, true))
+        renderTable(getObjectByProperty(currentList, "name", query, false, true))
     }
-}
-
-//binding events
-$("#search_btn").click(function () {
-    clearFilter()
-    // console.log($('#search_input').val())
-    var query = $('#search_input').val()
-    if (query == '') {
-        console.log("clearing the filter")
-    }
-    else if (!isNaN(parseInt(query))) {
+    else {
         console.log("searching by id")
-        $("#search_input").attr("placeholder", "Search by Id")
-        searchById(query)
-    }
-    else {
-        console.log("searching by name")
-        $("#search_input").attr("placeholder", "Search by Name")
-        searchByName(query)
-    }
-    $("#search_input")
-})
-
-$("#brands").on('change', function () {
-    var x = $(this).val()
-    if (x != 'none') {
-        clearFilter()
-        filterByBrands(x)
-    }
-    else {
-        clearFilter()
+        renderTable(getObjectByProperty(currentList, "id", query, false, true))
     }
 })
 
-$("#os").on('change', function () {
+$("#os").on("change", function () {
     var x = $(this).val()
-    if (x != 'none') {
-        clearFilter()
-        filterByOs(x)
-    }
-    else {
-        clearFilter()
-    }
+    filterByOs(x)
+})
+
+$("#brands").on("change", function () {
+    var x = $(this).val()
+    filterByBrand(x)
 })
 
 $("body").on("click", "#hide", function () {
-    // $(this).css("display", "none")
-    var query = $(this).attr("data")
-    for (let index = 1; index <= $('tr').length; index++) {
-        var name = $(`tr:eq(${index}) td:eq(0)`).text().toLowerCase()
-        if (name.search(query.toLowerCase()) >= 0) {
-            console.log($(`tr:eq(${index})`).text())
-            $(`tr:eq(${index})`).css('display', 'none')
-            // alert($(`tr:eq(${index}) td:eq(0)`).text())
-            deletedItems.push($(`tr:eq(${index}) td:eq(0)`).text())
-        }
-
-    }
+    console.log($(this).attr("data"))
+    currentList = getObjectByProperty(currentList, "id", $(this).attr("data"), true, false)
+    products = getObjectByProperty(currentList, "id", $(this).attr("data"), true, false)
+    console.log(currentList)
+    renderTable(currentList)
 })

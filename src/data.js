@@ -33,4 +33,17 @@ var products = [{
 					"name": "Surface",
 					"brand": "Microsoft",
 					"os": "Windows"
-				}];
+				},
+				{
+					"id": "106",
+					"name": "Samsung 10 edge",
+					"brand": "Samsung",
+					"os": "Android"
+				},
+				{
+					"id": "107",
+					"name": "redmi note 10",
+					"brand": "Xiomi",
+					"os": "Android"
+				}
+			];
