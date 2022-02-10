@@ -15,6 +15,7 @@ table {
   background-color: white;
   border-radius: 10px;
   box-shadow: 3px 3px 50px rgba(0, 0, 0, 0.301);
+  border-collapse: collapse;
 }
 
 table td,
@@ -48,6 +49,10 @@ input {
   color: black;
   border-radius: 10px 0px 0px 10px;
 }
-#os{
+#os {
   border-radius: 0px 10px 10px 0px;
+}
+
+tbody tr:last-child {
+  border: 0px !important;
 }

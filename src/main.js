@@ -134,6 +134,7 @@ function filterByOs(query) {
             renderTable(currentList)
         }
         else {
+            currentList = products
             renderTable(products, false)
 
         }
@@ -181,7 +182,13 @@ function clearFilter() {
 $("#search_input").keyup(function () {
     var query = $(this).val()
     if (query == "") {
-        renderTable(currentList)
+        if ($("#os").val() == "none" && $("#brands").val() == "none") {
+            renderTable(products)
+        }
+        else {
+            renderTable(currentList)
+
+        }
     }
     else if (query.match(/\D/)) {
         console.log("searchign by name")
